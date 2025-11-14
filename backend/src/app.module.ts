@@ -4,6 +4,7 @@ import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
 import { SessionModule } from './session/session.module';
 import { LoggerMiddleware } from './logger.middleware';
+import { AuthModule } from './vulnerability/auth/auth.module';
 
 @Module({
     imports: [
@@ -13,6 +14,7 @@ import { LoggerMiddleware } from './logger.middleware';
         DatabaseModule,
         UserModule,
         SessionModule,
+        AuthModule,
     ],
 })
 export class AppModule implements NestModule {
