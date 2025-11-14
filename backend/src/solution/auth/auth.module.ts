@@ -8,16 +8,19 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt/jwt.strategy';
 import { AuthController } from './auth.controller';
 import { LocalStrategy } from './local/local.strategy';
+import { SessionModule } from 'src/session/session.module';
+import { TokenService } from './token.service';
 
 @Module({
     imports: [
         ConfigModule.forRoot(),
         PassportModule,
         UserModule,
+        SessionModule,
         JwtModule.registerAsync(jwtConfig.asProvider()),
         ConfigModule.forFeature(jwtConfig),
     ],
     controllers: [AuthController],
-    providers: [AuthService, LocalStrategy, JwtStrategy],
+    providers: [AuthService, TokenService, LocalStrategy, JwtStrategy],
 })
 export class AuthModule {}

@@ -12,7 +12,7 @@ export class SessionService {
     ) {}
 
     async createOrReplaceSession(user: User, token: string) {
-        const existingSession = await this.findSessionByUser(user);
+        const existingSession = await this.findSessionByUser(user.id);
         if (existingSession)
             await this.sessionRepository.delete({ id: existingSession.id });
 
@@ -24,9 +24,9 @@ export class SessionService {
         return session.token;
     }
 
-    async findSessionByUser(user: User) {
+    async findSessionByUser(id: string) {
         return this.sessionRepository.findOne({
-            where: { user: { id: user.id }, expiresAt: MoreThan(new Date()) },
+            where: { user: { id }, expiresAt: MoreThan(new Date()) },
         });
     }
 
@@ -41,7 +41,7 @@ export class SessionService {
         return session;
     }
 
-    async deleteSession(user: User, token: string): Promise<void> {
-        await this.sessionRepository.delete({ user: { id: user.id }, token });
+    async deleteSession(id: string, token: string): Promise<void> {
+        await this.sessionRepository.delete({ user: { id }, token });
     }
 }

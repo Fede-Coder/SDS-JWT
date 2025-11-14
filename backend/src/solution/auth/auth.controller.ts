@@ -1,7 +1,15 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    Post,
+    Req,
+    Res,
+    UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/sign-up.dto';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { User } from 'src/user/user.entity';
 import { LocalAuthGuard } from './local/local-auth.guard';
 import { AccessTokenPayload } from 'src/types/AccessTokenPayload';
@@ -9,7 +17,7 @@ import { JwtAuthGuard } from './jwt/jwt-auth.guard';
 import { RolesGuard } from './jwt/roles.guard';
 import { Roles } from './jwt/roles.decorator';
 
-@Controller('v/auth')
+@Controller('s/auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
@@ -20,13 +28,30 @@ export class AuthController {
 
     @Post('login')
     @UseGuards(LocalAuthGuard)
-    async login(@Req() req: Request) {
-        return await this.authService.login(req.user as User);
+    async login(
+        @Req() req: Request,
+        @Res({ passthrough: true }) res: Response,
+    ) {
+        const login = await this.authService.login(req.user as User);
+
+        res.cookie('refresh_token', login.refresh_token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+        });
+
+        return login;
     }
 
     @Post('logout')
-    logout() {
-        return this.authService.logout();
+    @UseGuards(JwtAuthGuard)
+    logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+        const user = req.user as AccessTokenPayload;
+        const token = req.cookies['refresh_token'] as string;
+
+        res.clearCookie('refresh_token');
+
+        return this.authService.logout(user.sub, token);
     }
 
     @Get('role')

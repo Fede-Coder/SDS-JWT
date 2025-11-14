@@ -1,5 +1,5 @@
 export class AccessTokenPayload {
-    userId: string;
+    sub: string;
     email: string;
     role: string;
     iat: number;
