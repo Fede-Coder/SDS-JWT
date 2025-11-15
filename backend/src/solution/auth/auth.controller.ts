@@ -54,6 +54,13 @@ export class AuthController {
         return this.authService.logout(user.sub, token);
     }
 
+    @Post('refresh')
+    async refresh(@Req() req: Request) {
+        const token = req.cookies['refresh_token'] as string;
+
+        return await this.authService.refresh(token);
+    }
+
     @Get('role')
     @UseGuards(JwtAuthGuard, RolesGuard)
     getRole(@Req() req: Request) {

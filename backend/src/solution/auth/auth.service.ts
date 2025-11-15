@@ -61,7 +61,7 @@ export class AuthService {
 
         const access_token = await this.jwtService.signAsync(payload);
 
-        //En la solución, se agrega el REFRESH TOKEN
+        //Se agrega el REFRESH TOKEN
         const refresh_token = this.tokenService.generateRefreshToken();
         const hashedRefreshToken =
             await this.tokenService.hashToken(refresh_token);
@@ -78,7 +78,7 @@ export class AuthService {
             refresh_token,
         };
     }
-
+    //Solución
     async logout(id: string, token: string) {
         const existSession = await this.sessionService.findSessionByUser(id);
         if (!existSession) throw new UnauthorizedException();
@@ -88,14 +88,36 @@ export class AuthService {
             existSession.token,
         );
 
-        console.log('Token:', token);
-        console.log('hashToken:', existSession);
-        console.log('compare:', compare);
-
         if (!compare) throw new UnauthorizedException();
 
         await this.sessionService.deleteSession(id, existSession.token);
 
         return { message: 'Logged out' };
+    }
+
+    async refresh(token: string) {
+        if (!token) throw new UnauthorizedException();
+
+        const hashToken = await this.tokenService.hashToken(token);
+
+        const session = await this.sessionService.findSessionByToken(hashToken);
+
+        if (!session) throw new UnauthorizedException('Invalid refresh token');
+
+        const user = session.user;
+
+        const payload = {
+            sub: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            role: user.role,
+        };
+
+        const accessToken = await this.jwtService.signAsync(payload);
+
+        return {
+            access_token: accessToken,
+        };
     }
 }

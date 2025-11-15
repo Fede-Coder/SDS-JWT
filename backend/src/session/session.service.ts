@@ -30,6 +30,13 @@ export class SessionService {
         });
     }
 
+    async findSessionByToken(token: string) {
+        return this.sessionRepository.findOne({
+            where: { token, expiresAt: MoreThan(new Date()) },
+            relations: ['user'],
+        });
+    }
+
     async createSession(user: User, token: string, expiresAt: Date) {
         const session = this.sessionRepository.create({
             user,
