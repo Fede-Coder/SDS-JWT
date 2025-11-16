@@ -8,8 +8,11 @@ services:
       - POSTGRES_USER=sds
       - POSTGRES_PASSWORD=123456
       - POSTGRES_DB=sds_jwt
+      - TZ=America/Argentina/Buenos_Aires
     volumes:
       - pg_data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     networks:
       - sds-network
 
