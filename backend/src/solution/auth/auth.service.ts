@@ -63,12 +63,12 @@ export class AuthService {
 
         //Se agrega el REFRESH TOKEN
         const refresh_token = this.tokenService.generateRefreshToken();
-        const hashedRefreshToken =
-            await this.tokenService.hashToken(refresh_token);
+        const hashedRefreshToken = this.tokenService.hashToken(refresh_token);
 
         await this.sessionService.createOrReplaceSession(
             user,
             hashedRefreshToken,
+            this.tokenService.getRefreshTokenExpirationDate(),
         );
 
         //--------------------------------------------
@@ -83,7 +83,7 @@ export class AuthService {
         const existSession = await this.sessionService.findSessionByUser(id);
         if (!existSession) throw new UnauthorizedException();
 
-        const compare = await this.tokenService.compareTokens(
+        const compare = this.tokenService.compareTokens(
             token,
             existSession.token,
         );
@@ -98,7 +98,7 @@ export class AuthService {
     async refresh(token: string) {
         if (!token) throw new UnauthorizedException();
 
-        const hashToken = await this.tokenService.hashToken(token);
+        const hashToken = this.tokenService.hashToken(token);
 
         const session = await this.sessionService.findSessionByToken(hashToken);
 

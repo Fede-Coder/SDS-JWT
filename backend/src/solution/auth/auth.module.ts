@@ -10,10 +10,13 @@ import { AuthController } from './auth.controller';
 import { LocalStrategy } from './local/local.strategy';
 import { SessionModule } from 'src/session/session.module';
 import { TokenService } from './token.service';
+import tokenConfig from 'src/config/token.config';
 
 @Module({
     imports: [
-        ConfigModule.forRoot(),
+        ConfigModule.forRoot({
+            load: [tokenConfig],
+        }),
         PassportModule,
         UserModule,
         SessionModule,

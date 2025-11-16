@@ -1,20 +1,44 @@
 import { Injectable } from '@nestjs/common';
 import * as crypto from 'crypto';
-import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
+import ms from 'ms';
 
 //Se agrega nuevo servicio de Token
 @Injectable()
 export class TokenService {
+    constructor(private readonly configService: ConfigService) {}
+
     generateRefreshToken(): string {
         return crypto.randomBytes(48).toString('hex');
     }
 
-    async hashToken(token: string): Promise<string> {
-        const salt = await bcrypt.genSalt();
-        return await bcrypt.hash(token, salt);
+    hashToken(token: string): string {
+        return crypto
+            .createHmac(
+                'sha256',
+                this.configService.get<string>('refresh_token.secretKey') ||
+                    'secret-key',
+            )
+            .update(token)
+            .digest('hex');
     }
 
-    async compareTokens(token: string, hashed: string): Promise<boolean> {
-        return await bcrypt.compare(token, hashed);
+    compareTokens(token: string, hashed: string): boolean {
+        const tokenHash = this.hashToken(token);
+        return crypto.timingSafeEqual(
+            Buffer.from(tokenHash),
+            Buffer.from(hashed),
+        );
+    }
+
+    getRefreshTokenExpirationDate(): Date {
+        const expiresIn =
+            this.configService.get<string>('refresh_token.expiresIn') || '14D';
+
+        console.log(expiresIn);
+
+        const msValue = ms(expiresIn.toLowerCase() as ms.StringValue);
+
+        return new Date(Date.now() + msValue);
     }
 }

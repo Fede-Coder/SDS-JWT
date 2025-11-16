@@ -5,6 +5,7 @@ import {
     Post,
     Req,
     Res,
+    UnauthorizedException,
     UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -48,6 +49,8 @@ export class AuthController {
     logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
         const user = req.user as AccessTokenPayload;
         const token = req.cookies['refresh_token'] as string;
+
+        if (!token) throw new UnauthorizedException('Invalid refresh token');
 
         res.clearCookie('refresh_token');
 

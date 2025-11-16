@@ -11,16 +11,12 @@ export class SessionService {
         private readonly sessionRepository: Repository<Session>,
     ) {}
 
-    async createOrReplaceSession(user: User, token: string) {
+    async createOrReplaceSession(user: User, token: string, expiresIn: Date) {
         const existingSession = await this.findSessionByUser(user.id);
         if (existingSession)
             await this.sessionRepository.delete({ id: existingSession.id });
 
-        const session = await this.createSession(
-            user,
-            token,
-            new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        );
+        const session = await this.createSession(user, token, expiresIn);
         return session.token;
     }
 
