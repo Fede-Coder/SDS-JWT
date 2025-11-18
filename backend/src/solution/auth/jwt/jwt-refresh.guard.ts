@@ -1,9 +1,9 @@
 import {
+    CanActivate,
     ExecutionContext,
     Injectable,
     UnauthorizedException,
 } from '@nestjs/common';
-import { JwtAuthGuard } from './jwt-auth.guard';
 import { TokenService } from '../token.service';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
@@ -11,23 +11,30 @@ import { SessionService } from 'src/session/session.service';
 import { AccessTokenPayload } from 'src/types/AccessTokenPayload';
 
 @Injectable()
-export class JwtRefreshGuard extends JwtAuthGuard {
+export class JwtRefreshGuard implements CanActivate {
     constructor(
         private readonly tokenService: TokenService,
         private readonly sessionService: SessionService,
         private readonly jwtService: JwtService,
-    ) {
-        super();
-    }
+    ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const req = context.switchToHttp().getRequest<Request>();
         const res = context.switchToHttp().getResponse<Response>();
 
-        try {
-            const result = super.canActivate(context);
+        const authHeader = req.headers['authorization']?.split(' ')[1];
 
-            return result instanceof Promise ? await result : Boolean(result);
+        try {
+            if (!authHeader) throw new UnauthorizedException();
+            const payload =
+                await this.jwtService.verifyAsync<AccessTokenPayload>(
+                    authHeader,
+                    {
+                        secret: process.env.JWT_SECRET || 'secret',
+                    },
+                );
+            req.user = payload;
+            return true;
         } catch {
             const refreshToken = req.cookies['refresh_token'] as string;
             if (!refreshToken) throw new UnauthorizedException();
