@@ -6,6 +6,7 @@ import { SessionModule } from './session/session.module';
 import { LoggerMiddleware } from './logger.middleware';
 import { AuthModule as AuthModuleVulnerability } from './vulnerability/auth/auth.module';
 import { AuthModule as AuthModuleSolution } from './solution/auth/auth.module';
+import { BookModule } from './solution/book/book.module';
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { AuthModule as AuthModuleSolution } from './solution/auth/auth.module';
         SessionModule,
         AuthModuleVulnerability,
         AuthModuleSolution,
+        BookModule,
     ],
 })
 export class AppModule implements NestModule {

@@ -37,7 +37,7 @@ export class AuthController {
 
         res.cookie('refresh_token', login.refresh_token, {
             httpOnly: true,
-            secure: true,
+            secure: false,
             sameSite: 'strict',
         });
 
@@ -83,5 +83,11 @@ export class AuthController {
     @Roles('ADMIN')
     routeAdmin() {
         return 'Ruta de admin.';
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('profile')
+    getProfile(@Req() req: Request) {
+        return req.user;
     }
 }

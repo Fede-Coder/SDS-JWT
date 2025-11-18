@@ -25,7 +25,7 @@ function Register() {
 			<button className="btn btn-primary mt-4">Registrarse</button>
 			<div className="text-xs flex gap-1 justify-center">
 				<span className="font-extralight">¿Ya tienes una cuenta?</span>
-				<Link to={"/auth/login"} className="link link-hover ">
+				<Link to={"/auth/login"} className="link link-hover">
 					Iniciar sesión
 				</Link>
 			</div>
