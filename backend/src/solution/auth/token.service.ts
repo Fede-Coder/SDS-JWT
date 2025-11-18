@@ -3,7 +3,6 @@ import * as crypto from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import ms from 'ms';
 
-//Se agrega nuevo servicio de Token
 @Injectable()
 export class TokenService {
     constructor(private readonly configService: ConfigService) {}
@@ -34,8 +33,6 @@ export class TokenService {
     getRefreshTokenExpirationDate(): Date {
         const expiresIn =
             this.configService.get<string>('refresh_token.expiresIn') || '14D';
-
-        console.log(expiresIn);
 
         const msValue = ms(expiresIn.toLowerCase() as ms.StringValue);
 

@@ -7,7 +7,7 @@ function UserMenu() {
 	const profile = useGetProfile();
 	const logout = useLogout();
 
-	if (!profile.isSuccess) {
+	if (!profile.data) {
 		return (
 			<button
 				className="btn btn-secondary px-2 py-1 rounded-md text-white font-bold"

@@ -1,15 +1,31 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 interface AuthState {
+	apiMode: "s" | "v";
 	accessToken: string | null;
 	setToken: (value: string) => void;
 	clear: () => void;
-	loggedOut: boolean;
+	toggleApiMode: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-	accessToken: null,
-	loggedOut: false,
-	setToken: (token) => set({ accessToken: token, loggedOut: false }),
-	clear: () => set({ accessToken: null, loggedOut: true }),
-}));
+export const useAuthStore = create<AuthState>()(
+	persist(
+		(set) => ({
+			apiMode: "s",
+			accessToken: null,
+			setToken: (token) => set({ accessToken: token }),
+			clear: () => set({ accessToken: null }),
+			toggleApiMode: () =>
+				set((state) => ({
+					apiMode: state.apiMode === "s" ? "v" : "s",
+				})),
+		}),
+		{
+			name: "auth-storage",
+			partialize(state) {
+				return { apiMode: state.apiMode };
+			},
+		}
+	)
+);

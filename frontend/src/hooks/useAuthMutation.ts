@@ -9,10 +9,11 @@ export const useLogin = () => {
 	return useMutation({
 		mutationFn: (data: { email: string; password: string }) =>
 			apiClient.post("/auth/login", data),
-		onSuccess: (res) => {
+		onSuccess: async (res) => {
 			const token = res.data.access_token;
 			setToken(token);
-			queryClient.invalidateQueries({ queryKey: ["profile"] });
+			apiClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+			await queryClient.refetchQueries({ queryKey: ["profile"] });
 		},
 	});
 };

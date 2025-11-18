@@ -7,12 +7,17 @@ import { LoggerMiddleware } from './logger.middleware';
 import { AuthModule as AuthModuleVulnerability } from './vulnerability/auth/auth.module';
 import { AuthModule as AuthModuleSolution } from './solution/auth/auth.module';
 import { BookModule } from './solution/book/book.module';
+import tokenConfig from './config/token.config';
+import { GlobalJwtModule } from './solution/common/jwt/jwt.module';
 
 @Module({
     imports: [
         ConfigModule.forRoot({
+            isGlobal: true,
             envFilePath: `.${process.env.NODE_ENV}.env`,
+            load: [tokenConfig],
         }),
+        GlobalJwtModule,
         DatabaseModule,
         UserModule,
         SessionModule,

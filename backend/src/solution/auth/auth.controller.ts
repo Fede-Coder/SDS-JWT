@@ -14,9 +14,9 @@ import { Request, Response } from 'express';
 import { User } from 'src/user/user.entity';
 import { LocalAuthGuard } from './local/local-auth.guard';
 import { AccessTokenPayload } from 'src/types/AccessTokenPayload';
-import { JwtAuthGuard } from './jwt/jwt-auth.guard';
 import { RolesGuard } from './jwt/roles.guard';
 import { Roles } from './jwt/roles.decorator';
+import { JwtRefreshGuard } from './jwt/jwt-refresh.guard';
 
 @Controller('s/auth')
 export class AuthController {
@@ -45,7 +45,7 @@ export class AuthController {
     }
 
     @Post('logout')
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtRefreshGuard)
     logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
         const user = req.user as AccessTokenPayload;
         const token = req.cookies['refresh_token'] as string;
@@ -57,35 +57,28 @@ export class AuthController {
         return this.authService.logout(user.sub, token);
     }
 
-    @Post('refresh')
-    async refresh(@Req() req: Request) {
-        const token = req.cookies['refresh_token'] as string;
-
-        return await this.authService.refresh(token);
-    }
-
     @Get('role')
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseGuards(JwtRefreshGuard, RolesGuard)
     getRole(@Req() req: Request) {
         const user = req.user as AccessTokenPayload;
         return { role: user.role };
     }
 
     @Get('user')
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseGuards(JwtRefreshGuard, RolesGuard)
     @Roles('USER', 'ADMIN')
     routeUser() {
         return 'Ruta de usuario.';
     }
 
     @Get('admin')
-    @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseGuards(JwtRefreshGuard, RolesGuard)
     @Roles('ADMIN')
     routeAdmin() {
         return 'Ruta de admin.';
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtRefreshGuard)
     @Get('profile')
     getProfile(@Req() req: Request) {
         return req.user;

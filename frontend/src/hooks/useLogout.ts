@@ -10,7 +10,8 @@ export const useLogout = () => {
 		mutationFn: () => apiClient.post("/auth/logout"),
 		onSuccess: () => {
 			clear();
-			queryClient.invalidateQueries({ queryKey: ["profile"] });
+			delete apiClient.defaults.headers.common["Authorization"];
+			queryClient.setQueryData(["profile"], null);
 		},
 	});
 };

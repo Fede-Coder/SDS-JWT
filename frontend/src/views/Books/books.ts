@@ -3,8 +3,15 @@ interface IBook {
 	title: string;
 	author: string;
 	genre: string;
-	publication_date: Date;
+	publicationDate: Date;
     pages: number;
 	description: string;
 	isbn: string;
+}
+
+export interface IBookResponse {
+	page: number,
+	limit: number,
+	totalPages: number,
+	data: IBook[]
 }

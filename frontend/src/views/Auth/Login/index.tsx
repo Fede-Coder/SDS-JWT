@@ -32,7 +32,7 @@ function Login() {
 	// 3. Handler del submit
 	const onSubmit = async (data: LoginForm) => {
 		login.mutate(data, {
-			onSuccess: () => {
+			onSuccess: async () => {
 				navigate("/books");
 			},
 		});
