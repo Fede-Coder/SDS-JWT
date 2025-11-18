@@ -1,4 +1,7 @@
 {
     "material-icon-theme.activeIconPack": "nest",
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "tailwindCSS.experimental.configFile": "Frontend/src/index.css",
+    "prettier.tabWidth": 4,
+    "prettier.useTabs": true
 }
