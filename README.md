@@ -12,9 +12,21 @@ El sistema sigue el patrón **Token + Refresh Token**, donde:
 3. El `refresh_token` se usa para solicitar nuevos tokens y puede ser revocado por el servidor.
 
 ## 🧩 Tecnologías
+- ReactJS
 - NestJS
 - PostgreSQL
 - Docker
+### Docker – Nota
+
+Para levantar el servidor PostgreSQL, debe tener instalados **Docker** y **Docker Compose** en su computadora.  
+El comando para iniciar desde ese proyecto es:
+```bash
+docker compose up -d
+```
+- Para MacOS usar la imagen `postgres:latest`
+- Para Linux usar la imagen `18.1-alpine3.22`
+
+(Se edita en el `docker-compose.yml` en la linea 3.)
 
 ## 👨‍💻 Autores:
 - Nieto Federico - 79542
