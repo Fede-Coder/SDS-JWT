@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseConfig } from './database.interface';
+import { SqlSeedService } from './sqlseed.service';
 
 @Module({
     imports: [
@@ -28,6 +29,7 @@ import { DatabaseConfig } from './database.interface';
             },
         }),
     ],
+    providers: [SqlSeedService],
     exports: [TypeOrmModule],
 })
 export class DatabaseModule {}
