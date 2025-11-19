@@ -1,6 +1,11 @@
 import { useGetBook } from "@/hooks/useGetBook";
 import { useGetProfile } from "@/hooks/useGetProfile";
-import { EyeIcon, InfoIcon, PencilSimpleIcon, TrashIcon } from "@phosphor-icons/react";
+import {
+	EyeIcon,
+	InfoIcon,
+	PencilSimpleIcon,
+	TrashIcon,
+} from "@phosphor-icons/react";
 import { useState } from "react";
 import Pagination from "./pagination";
 import { useDeleteBook } from "@/hooks/useDeleteBook";
@@ -22,13 +27,96 @@ function Books() {
 		}
 	};
 
-	if (books.isLoading) return <>Loading...</>;
+	if (books.isLoading)
+		return (
+			<div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+				<table className="table">
+					<thead>
+						<tr>
+							<th>Título</th>
+							<th>Autor</th>
+							<th>Género</th>
+							<th>Año</th>
+							<th>Páginas</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<div className="skeleton h-4 w-full"></div>
+							</td>
+							<td>
+								<div className="skeleton h-4 w-full"></div>
+							</td>
+							<td>
+								<div className="skeleton h-4 w-full"></div>
+							</td>
+							<td>
+								<div className="skeleton h-4 w-full"></div>
+							</td>
+							<td>
+								<div className="skeleton h-4 w-full"></div>
+							</td>
+							<td>
+								<div className="skeleton h-4 w-full"></div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div className="skeleton h-4 w-full"></div>
+							</td>
+							<td>
+								<div className="skeleton h-4 w-full"></div>
+							</td>
+							<td>
+								<div className="skeleton h-4 w-full"></div>
+							</td>
+							<td>
+								<div className="skeleton h-4 w-full"></div>
+							</td>
+							<td>
+								<div className="skeleton h-4 w-full"></div>
+							</td>
+							<td>
+								<div className="skeleton h-4 w-full"></div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		);
 
-	if(profile.data)
+	if (profile.isError)
+		return (
+			<div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
+				<table className="table">
+					<thead>
+						<tr>
+							<th>Título</th>
+							<th>Autor</th>
+							<th>Género</th>
+							<th>Año</th>
+							<th>Páginas</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td colSpan={6} className="text-center py-6">
+								Debe iniciar la sesión para ver lista de libros
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		);
+
+	if (profile.data)
 		return (
 			<div>
 				<div role="alert" className="alert alert-info">
-					<InfoIcon size={32}/>
+					<InfoIcon size={32} />
 					<div>
 						<p>
 							<span className="underline font-bold">Id:</span>{" "}
@@ -43,7 +131,9 @@ function Books() {
 							{profile.data.firstName}
 						</p>
 						<p>
-							<span className="underline font-bold">Apellido:</span>{" "}
+							<span className="underline font-bold">
+								Apellido:
+							</span>{" "}
 							{profile.data.lastName}
 						</p>
 						<p>
@@ -100,7 +190,9 @@ function Books() {
 													<button
 														className="btn btn-sm btn-error btn-square"
 														onClick={() =>
-															handleDelete(value.id)
+															handleDelete(
+																value.id
+															)
 														}
 													>
 														<TrashIcon size={20} />
