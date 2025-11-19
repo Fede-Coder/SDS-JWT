@@ -9,6 +9,7 @@ import {
     Query,
     ParseIntPipe,
     UseGuards,
+    Header,
 } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
@@ -31,6 +32,7 @@ export class BookController {
     @Get()
     @UseGuards(JwtRefreshGuard, RolesGuard)
     @Roles('USER', 'ADMIN')
+    @Header('Cache-Control', 'no-store')
     findAll(
         @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
         @Query('limit', new ParseIntPipe({ optional: true }))

@@ -6,6 +6,11 @@ const BASE_URL_ROOT = "http://localhost:3000";
 const apiClient = axios.create({
 	baseURL: `${BASE_URL_ROOT}/s`,
 	withCredentials: true,
+	headers: {
+		"Cache-Control": "no-cache, no-store, must-revalidate",
+		Pragma: "no-cache",
+		Expires: "0",
+	},
 });
 
 // REQUEST: agregar access token
