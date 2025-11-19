@@ -94,30 +94,4 @@ export class AuthService {
 
         return { message: 'Logged out' };
     }
-
-    async refresh(token: string) {
-        if (!token) throw new UnauthorizedException();
-
-        const hashToken = this.tokenService.hashToken(token);
-
-        const session = await this.sessionService.findSessionByToken(hashToken);
-
-        if (!session) throw new UnauthorizedException('Invalid refresh token');
-
-        const user = session.user;
-
-        const payload = {
-            sub: user.id,
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            role: user.role,
-        };
-
-        const accessToken = await this.jwtService.signAsync(payload);
-
-        return {
-            access_token: accessToken,
-        };
-    }
 }

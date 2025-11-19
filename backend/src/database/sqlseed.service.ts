@@ -20,7 +20,7 @@ export class SqlSeedService implements OnModuleInit {
             }
 
             // Leer archivo SQL
-            const filePath = join(__dirname, './books.sql');
+            const filePath = join(process.cwd(), 'src/database/books.sql');
             const sql = readFileSync(filePath, 'utf8');
 
             // Ejecutar SQL
